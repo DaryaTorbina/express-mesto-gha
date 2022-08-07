@@ -1,0 +1,4 @@
+exports.ERROR_CODE_REQUEST = 400;
+exports.ERROR_CODE_NOTFOUND = 404;
+exports.ERROR_CODE_DEFAULT = 500;
+
