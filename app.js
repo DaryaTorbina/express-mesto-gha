@@ -25,11 +25,8 @@ app.use((req, res, next) => {
 
 app.use(usersRouter);
 app.use(cardsRouter);
-
 app.all('*', (req, res) => {
   res.status(ERROR_CODE_NOTFOUND).send({ message: 'Ошибка 404. Страница не найдена!' });
 });
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT, () => {});

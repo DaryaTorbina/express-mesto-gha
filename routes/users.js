@@ -11,4 +11,3 @@ usersRouter.patch('/users/me', updateUser); // обновляет профиль
 usersRouter.patch('/users/me/avatar', updateUserAvatar); // обновляет аватар
 
 module.exports = usersRouter;
-//создать роут
