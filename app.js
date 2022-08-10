@@ -4,8 +4,6 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
-const { ERROR_CODE_NOTFOUND } = require('./constants');
-
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -26,7 +24,7 @@ app.use((req, res, next) => {
 app.use(usersRouter);
 app.use(cardsRouter);
 app.all('*', (req, res) => {
-  res.status(ERROR_CODE_NOTFOUND).send({ message: 'Ошибка 404. Страница не найдена!' });
+  res.status(404).send({ message: 'Ошибка 404. Страница не найдена!' });
 });
 
 app.listen(PORT, () => {});
