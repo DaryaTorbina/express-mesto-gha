@@ -47,7 +47,7 @@ const updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным _id не найден');
@@ -55,9 +55,7 @@ const updateUser = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequest(
-          'Переданы некорректные данные при обновлении профиля'
-        );
+        throw new BadRequest('Переданы некорректные данные при обновлении профиля');
       }
     })
     .catch(next);
@@ -71,7 +69,7 @@ const updateUserAvatar = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .orFail(() => {
       throw new NotFoundError('Пользователь с указанным _id не найден');
@@ -80,7 +78,7 @@ const updateUserAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new BadRequest(
-          'Переданы некорректные данные при обновлении аватара'
+          'Переданы некорректные данные при обновлении аватара',
         );
       }
     })
