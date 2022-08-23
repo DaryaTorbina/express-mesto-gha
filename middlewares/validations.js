@@ -69,6 +69,7 @@ const valCardId = celebrate({
 });
 
 module.exports = {
+  valUrl,
   valLogin,
   valCreateUser,
   valUpdateUser,
