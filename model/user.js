@@ -23,8 +23,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     // required: true,
     validate: {
-      validator: (url) => isUrl(url),
-      message: 'Некорректный URL адрес',
+      validator: (url, helpers) => {
+        const regex = /^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\\/])*)?/g;
+        if (!regex.test(url)) {
+          return helpers.error('Invalid URL');
+        }
+        return url;
+      },
     },
     default: 'https://www.mirf.ru/wp-content/uploads/2020/09/1480331127-scaled.jpg',
   },
