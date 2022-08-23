@@ -22,7 +22,7 @@ const getAllUsers = async (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => next(err));
-}; //
+};
 
 const createUser = (req, res, next) => {
   const {

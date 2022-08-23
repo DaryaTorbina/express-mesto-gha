@@ -1,4 +1,4 @@
-const cardsRouter = require('express').Router();
+const router = require('express').Router();
 
 const {
   getCards,
@@ -12,10 +12,10 @@ const {
   valCardId,
 } = require('../middlewares/validations');
 
-cardsRouter.get('/cards', getCards); // возвращает все карточки
-cardsRouter.post('/cards', createCard); // создаёт карточку
-cardsRouter.delete('/cards/:cardId', deleteCard); // даляет карточку по идентификатору
-cardsRouter.put('/cards/:cardId/likes', valCreateCard, likeCard); // поставить лайк карточке
-cardsRouter.delete('/cards/:cardId/likes', valCardId, dislikeCard); // убрать лайк с карточки
+router.get('/', getCards); // возвращает все карточки
+router.post('/cards', valCreateCard, createCard); // создаёт карточку
+router.delete('/:cardId', valCardId, deleteCard); // даляет карточку по идентификатору
+router.put('/:cardId/likes', valCardId, likeCard); // поставить лайк карточке
+router.delete('/cards/:cardId/likes', valCardId, dislikeCard); // убрать лайк с карточки
 
-module.exports = cardsRouter;
+module.exports = router;
