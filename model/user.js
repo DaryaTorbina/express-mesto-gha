@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const isUrl = require('validator/lib/isURL');
+// const isUrl = require('validator/lib/isURL');
 const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcryptjs');
 const AuthError = require('../errors/AuthError');
