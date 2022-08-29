@@ -19,14 +19,11 @@ const valLogin = celebrate({
 
 const valCreateUser = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string()
-      .regex(
-        /^((http|https):\/\/)?(www\.)?([a-zа-я0-9]{1}[a-zа-я0-9-\\]*\.?)*\.{1}[a-zа-я0-9-]{2,8}(\w-\.~:\/?#\[\]@!$&'\(\)*\+,;=)?/i,
-      ),
+    avatar: Joi.string().custom(valUrl),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
   }),
 });
 
@@ -39,10 +36,7 @@ const valUpdateUser = celebrate({
 
 const valUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required()
-      .regex(
-        /^((http|https):\/\/)?(www\.)?([a-zа-я0-9]{1}[a-zа-я0-9-\\]*\.?)*\.{1}[a-zа-я0-9-]{2,8}(\w-\.~:\/?#\[\]@!$&'\(\)*\+,;=)?/i,
-      ),
+    avatar: Joi.string().required().custom(valUrl),
   }),
 });
 
@@ -54,11 +48,8 @@ const valUserId = celebrate({
 
 const valCreateCard = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required()
-      .regex(
-        /^((http|https):\/\/)?(www\.)?([a-zа-я0-9]{1}[a-zа-я0-9-\\]*\.?)*\.{1}[a-zа-я0-9-]{2,8}(\w-\.~:\/?#\[\]@!$&'\(\)*\+,;=)?/i,
-      ),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().required().custom(valUrl),
   }),
 });
 
@@ -69,7 +60,6 @@ const valCardId = celebrate({
 });
 
 module.exports = {
-  valUrl,
   valLogin,
   valCreateUser,
   valUpdateUser,

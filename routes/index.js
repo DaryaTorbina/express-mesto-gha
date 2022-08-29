@@ -7,7 +7,7 @@ router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 
 router.use((req, res, next) => {
-  next(new NotFound('Запрашиваемая страница не существует'));
+  next(new NotFound('Запрашиваемой страницы не существует'));
 });
 
 module.exports = router;
