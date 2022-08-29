@@ -6,17 +6,34 @@ const BadRequest = require('../errors/BadRequest');
 const ConflictError = require('../errors/ConflictError');
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.userId) // найти конкретного
-    .orFail(() => new NotFound('Пользователь с указанным id не существует'))
-    .then((user) => res.send(user))
+  const { userId } = req.params;
+
+  return User.findById(userId)
+    .orFail(() => {
+      throw new NotFound('Пользователь с указанным id не существует');
+    })
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Некорректный id пользователя'));
-      } else {
-        next(err);
       }
+      if (err.message === 'NotFound') {
+        next(new NotFound('Пользователь с указанным id не существует'));
+      }
+      next(err);
     });
 };
+//   User.findById(req.params.userId) // найти конкретного
+//     .orFail(() => new NotFound('Пользователь с указанным id не существует'))
+//     .then((user) => res.send(user))
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         next(new BadRequest('Некорректный id пользователя'));
+//       } else {
+//         next(err);
+//       }
+//     });
+// };
 
 const getAllUsers = async (req, res, next) => {
   User.find({})
