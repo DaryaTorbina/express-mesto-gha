@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     // required: true,
     minlength: 2,
     maxlength: 30,
-    default: 'Исследователь океана',
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
       validator: (url) => isUrl(url),
       message: 'Некорректный адрес URL',
     },
-    default: 'https://www.mirf.ru/wp-content/uploads/2020/09/1480331127-scaled.jpg',
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
