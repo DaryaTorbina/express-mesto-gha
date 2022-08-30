@@ -22,34 +22,6 @@ const getUser = (req, res, next) => {
       next(err);
     });
 };
-//   const { userId } = req.params;
-
-//   return User.findById(userId)
-//     .orFail(() => {
-//       throw new NotFound('Пользователь с указанным id не существует');
-//     })
-//     .then((user) => res.status(200).send(user))
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequest('Некорректный id пользователя'));
-//       }
-//       if (err.message === 'NotFound') {
-//         next(new NotFound('Пользователь с указанным id не существует'));
-//       }
-//       next(err);
-//     });
-// };
-//   User.findById(req.params.userId) // найти конкретного
-//     .orFail(() => new NotFound('Пользователь с указанным id не существует'))
-//     .then((user) => res.send(user))
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequest('Некорректный id пользователя'));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
 
 const getAllUsers = async (req, res, next) => {
   User.find({})
@@ -58,17 +30,14 @@ const getAllUsers = async (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
-  } = req.body;
-  if ((!email) || (!password)) {
-    throw new BadRequest('Поля "email" и "password" должны быть обязательно заполнены');
+  const { name, about, avatar, email, password } = req.body;
+  if (!email || !password) {
+    throw new BadRequest(
+      'Поля "email" и "password" должны быть заполнены'
+    );
   }
-  bcrypt.hash(password, 10)
+  bcrypt
+    .hash(password, 10)
     .then((hash) => {
       User.create({
         name,
@@ -90,48 +59,24 @@ const createUser = (req, res, next) => {
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            next(new BadRequest('Переданы некорректные данные при создании пользователя'));
+            next(
+              new BadRequest(
+                'Переданы некорректные данные при создании пользователя'
+              )
+            );
           }
           if (err.code === 11000) {
-            next(new ConflictError('Данный email уже существует'));
+            next(new ConflictError('Данный email уже зарегистрирован'));
           }
           next(err);
         });
     })
     .catch(next);
 };
-//   const {
-//     name, about, avatar, email,
-//   } = req.body;
-//   bcrypt
-//     .hash(req.body.password, 15)
-//     .then((hash) => {
-//       User.create({
-//         name,
-//         about,
-//         avatar,
-//         email,
-//         password: hash,
-//       });
-//     })
-//     .then((user) => res.status(201).send(user))
-//     .catch((err) => {
-//       if (err.name === 'ValidationError') {
-//         throw new BadRequest(
-//           'Некорректные данные при создании пользователя',
-//         );
-//       } else if (err.code === 11000) {
-//         throw new ConflictError(
-//           'Пользователь с этим email уже зарегистрирован',
-//         );
-//       }
-//     })
-//     .catch(next);
-// };
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  if ((!about) || (!name)) {
+  if (!about || !name) {
     throw new BadRequest('Переданы некорректные данные при обновлении профиля');
   }
   User.findByIdAndUpdate(
@@ -140,40 +85,26 @@ const updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    },
+    }
   )
     .then((user) => {
       if (user) {
         res.send(user);
       } else {
-        throw new NotFound('Переданы некорректные данные при обновлении профиля');
+        throw new NotFound(
+          'Переданы некорректные данные при обновлении профиля'
+        );
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest('Переданы некорректные данные при обновлении профиля'));
+        next(
+          new BadRequest('Переданы некорректные данные при обновлении профиля')
+        );
       }
       next(err);
     });
 };
-//   const { name, about } = req.body;
-
-//   return User.findByIdAndUpdate(
-//     req.user._id,
-//     { name, about },
-//     { new: true, runValidators: true },
-//   )
-//     .orFail(() => {
-//       throw new NotFound('Пользователь с указанным _id не найден');
-//     })
-//     .then((user) => res.status(200).send(user))
-//     .catch((err) => {
-//       if (err.name === 'ValidationError' || err.name === 'CastError') {
-//         throw new BadRequest('Некорректные данные при обновлении');
-//       }
-//     })
-//     .catch(next);
-// };
 
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
@@ -183,7 +114,7 @@ const updateUserAvatar = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    },
+    }
   )
     .orFail(() => {
       throw new NotFound('Пользователь с указанным _id не найден');
@@ -191,9 +122,7 @@ const updateUserAvatar = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequest(
-          'Некорректные данные при обновлении аватара',
-        );
+        throw new BadRequest('Некорректные данные при обновлении аватара');
       }
     })
     .catch(next);
@@ -219,22 +148,15 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        expiresIn: '7d',
+      });
       res.send({ token });
     })
     .catch(() => {
       next(new AuthError('Неправильные почта или пароль'));
     });
 };
-//   const { email, password } = req.body;
-
-//   return User.findUserByCredentials(email, password)
-//     .then((user) => {
-//       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-//       res.send({ token });
-//     })
-//     .catch(next);
-// };
 
 module.exports = {
   getAllUsers,
