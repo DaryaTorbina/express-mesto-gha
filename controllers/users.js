@@ -30,10 +30,12 @@ const getAllUsers = async (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
   if (!email || !password) {
     throw new BadRequest(
-      'Поля "email" и "password" должны быть заполнены'
+      'Поля "email" и "password" должны быть заполнены',
     );
   }
   bcrypt
@@ -61,8 +63,8 @@ const createUser = (req, res, next) => {
           if (err.name === 'ValidationError') {
             next(
               new BadRequest(
-                'Переданы некорректные данные при создании пользователя'
-              )
+                'Переданы некорректные данные при создании пользователя',
+              ),
             );
           }
           if (err.code === 11000) {
@@ -85,21 +87,21 @@ const updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       if (user) {
         res.send(user);
       } else {
         throw new NotFound(
-          'Переданы некорректные данные при обновлении профиля'
+          'Переданы некорректные данные при обновлении профиля',
         );
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(
-          new BadRequest('Переданы некорректные данные при обновлении профиля')
+          new BadRequest('Переданы некорректные данные при обновлении профиля'),
         );
       }
       next(err);
@@ -114,7 +116,7 @@ const updateUserAvatar = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .orFail(() => {
       throw new NotFound('Пользователь с указанным _id не найден');
